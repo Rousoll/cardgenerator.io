@@ -85,29 +85,21 @@
         let image = new Image();
         image.crossOrigin = "Anonymous";
         image.src = selectedDesign;
-        image.onload = () => updatePreview();
+        image.onload = function () {
+            canvas.width = image.width;
+            canvas.height = image.height;
+            updatePreview();
+        };
 
         function updatePreview() {
             if (!selectedDesign) return;
 
             let nameText = document.getElementById("nameInput").value;
-            let maxCanvasWidth = Math.min(window.innerWidth * 0.95, 1200); // Higher resolution for mobile
-            let scaleFactor = maxCanvasWidth / image.width;
-            
-            canvas.width = maxCanvasWidth;
-            canvas.height = image.height * scaleFactor;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            let tempCanvas = document.createElement("canvas");
-            tempCanvas.width = image.width;
-            tempCanvas.height = image.height;
-            let tempCtx = tempCanvas.getContext("2d");
-            tempCtx.drawImage(image, 0, 0, image.width, image.height);
-            
-            ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
             // Adjust text size dynamically
-            let fontSize = Math.max(18, canvas.width * 0.04); // Responsive font size
+            let fontSize = Math.max(18, canvas.width * 0.04);
             ctx.font = `bold ${fontSize}px Cairo, sans-serif`;
             ctx.fillStyle = "#fff";
             ctx.textAlign = "center";
@@ -125,7 +117,7 @@
             }
 
             let link = document.createElement("a");
-            link.href = canvas.toDataURL("image/png", 1.0); // High-quality image
+            link.href = canvas.toDataURL("image/png", 1.0);
             link.download = "Custom_Card.png";
             document.body.appendChild(link);
             link.click();
