@@ -91,16 +91,23 @@
             if (!selectedDesign) return;
 
             let nameText = document.getElementById("nameInput").value;
-            let maxCanvasWidth = Math.min(window.innerWidth * 0.95, 800); // Increase resolution and adapt to mobile
+            let maxCanvasWidth = Math.min(window.innerWidth * 0.95, 1200); // Higher resolution for mobile
             let scaleFactor = maxCanvasWidth / image.width;
             
             canvas.width = maxCanvasWidth;
             canvas.height = image.height * scaleFactor;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            
+            let tempCanvas = document.createElement("canvas");
+            tempCanvas.width = image.width;
+            tempCanvas.height = image.height;
+            let tempCtx = tempCanvas.getContext("2d");
+            tempCtx.drawImage(image, 0, 0, image.width, image.height);
+            
+            ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
 
             // Adjust text size dynamically
-            let fontSize = Math.max(16, canvas.width * 0.05); // Responsive font size
+            let fontSize = Math.max(18, canvas.width * 0.04); // Responsive font size
             ctx.font = `bold ${fontSize}px Cairo, sans-serif`;
             ctx.fillStyle = "#fff";
             ctx.textAlign = "center";
