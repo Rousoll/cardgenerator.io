@@ -73,14 +73,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>بطاقة عيد الفطر</h1>
+        <h1 id="title">بطاقة عيد الفطر</h1>
         <div class="card-form">
             <input type="text" id="nameInput" placeholder="ادخل اسمك" oninput="updatePreview()">
-            <button onclick="generateCard()">تحميل البطاقة</button>
+            <button onclick="generateCard()" id="generateButton">تحميل البطاقة</button>
         </div>
         <div class="preview" id="previewContainer">
             <canvas id="previewCanvas"></canvas>
         </div>
+        <button onclick="toggleLanguage()" id="langToggle">Switch to English</button>
     </div>
     
     <script>
@@ -96,6 +97,8 @@
             updatePreview();
         };
 
+        let currentLang = "ar"; // Default language is Arabic
+
         function updatePreview() {
             if (!selectedDesign) return;
 
@@ -104,7 +107,7 @@
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
             // Adjust text size dynamically
-            let fontSize = Math.max(18, canvas.width * 0.04);
+            let fontSize = Math.max(20, canvas.width * 0.04);
             ctx.font = `bold ${fontSize}px 'Graphik Arabic', sans-serif`;
             ctx.fillStyle = "#fff";
             ctx.textAlign = "center";
@@ -117,16 +120,37 @@
 
         function generateCard() {
             if (canvas.width === 0 || canvas.height === 0) {
-                alert("يرجى إنشاء المعاينة أولاً!");
+                alert(currentLang === "ar" ? "يرجى إنشاء المعاينة أولاً!" : "Please generate the preview first!");
                 return;
             }
 
             let link = document.createElement("a");
             link.href = canvas.toDataURL("image/png", 1.0);
-            link.download = "Custom_Card.png";
+            link.download = currentLang === "ar" ? "بطاقة_مخصصة.png" : "Custom_Card.png";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        function toggleLanguage() {
+            if (currentLang === "ar") {
+                // Switch to English
+                document.documentElement.lang = "en";
+                document.getElementById("title").innerText = "Eid Greeting Card";
+                document.getElementById("generateButton").innerText = "Download Card";
+                document.getElementById("langToggle").innerText = "Switch to Arabic";
+                document.getElementById("nameInput").placeholder = "Enter your name";
+                currentLang = "en";
+            } else {
+                // Switch to Arabic
+                document.documentElement.lang = "ar";
+                document.getElementById("title").innerText = "بطاقة عيد الفطر";
+                document.getElementById("generateButton").innerText = "تحميل البطاقة";
+                document.getElementById("langToggle").innerText = "Switch to English";
+                document.getElementById("nameInput").placeholder = "ادخل اسمك";
+                currentLang = "ar";
+            }
+            updatePreview();
         }
     </script>
 </body>
