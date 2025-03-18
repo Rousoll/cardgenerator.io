@@ -91,7 +91,7 @@
             if (!selectedDesign) return;
 
             let nameText = document.getElementById("nameInput").value;
-            let maxCanvasWidth = Math.min(window.innerWidth * 0.9, 800); // Increase resolution
+            let maxCanvasWidth = Math.min(window.innerWidth * 0.95, 800); // Increase resolution and adapt to mobile
             let scaleFactor = maxCanvasWidth / image.width;
             
             canvas.width = maxCanvasWidth;
@@ -100,7 +100,7 @@
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
             // Adjust text size dynamically
-            let fontSize = 20; // Reduced font size
+            let fontSize = Math.max(16, canvas.width * 0.05); // Responsive font size
             ctx.font = `bold ${fontSize}px Cairo, sans-serif`;
             ctx.fillStyle = "#fff";
             ctx.textAlign = "center";
@@ -118,7 +118,7 @@
             }
 
             let link = document.createElement("a");
-            link.href = canvas.toDataURL("image/png");
+            link.href = canvas.toDataURL("image/png", 1.0); // High-quality image
             link.download = "Custom_Card.png";
             document.body.appendChild(link);
             link.click();
